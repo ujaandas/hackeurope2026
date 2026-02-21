@@ -7,7 +7,7 @@ services:
     environment:
       - DATABASE_PATH=/app/data/greenlinter.db
       - OLLAMA_URL=http://ollama:11434
-      - OLLAMA_MODEL=codellama
+      - OLLAMA_MODEL=llama3.2:1b
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - AI_PROVIDER=${AI_PROVIDER:-ollama}
     volumes:
