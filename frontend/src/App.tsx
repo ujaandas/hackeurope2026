@@ -15,13 +15,13 @@ import {
 import { Viewer as ResiumViewer } from "resium";
 import { Viewer as CesiumViewer } from "cesium";
 import { Math as CesiumMath } from "cesium";
-import { SidebarActive } from "@/components/sidebar-active";
+// import { SidebarActive } from "@/components/sidebar-active";
 import { SidebarInactive } from "@/components/sidebar-inactive";
-import type { BackendResponse, DrawingState, PolygonCoords } from "@/lib/types";
-import { fetchAreaName, sendPolygonToBackend } from "@/lib/api";
+import type { DrawingState, PolygonCoords } from "@/lib/types";
 import ResiumPolygonDraw from "./components/resium-polygon-draw";
 import { AlertDialogDemo } from "./components/intro-alert";
 import DrawButton from "./components/draw-button";
+import { sendPolygonToBackend } from "@/lib/api";
 
 Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ACCESS_TOKEN;
 
@@ -39,10 +39,10 @@ export default function App() {
     isClearable: false,
     isCompleted: false,
   });
-  const [areaName, setAreaName] = useState("");
-  const [isOcean, setIsOcean] = useState(false);
-  const [hasCountry, setHasCountry] = useState(false);
-  const [backendResponse, setBackendResponse] = useState<BackendResponse>();
+  // const [areaName, setAreaName] = useState("");
+  // const [isOcean, setIsOcean] = useState(false);
+  // const [hasCountry, setHasCountry] = useState(false);
+  // const [backendResponse, setBackendResponse] = useState<BackendResponse>();
 
   const dragThreshold = 5; // pixels
 
@@ -73,13 +73,14 @@ export default function App() {
         (async () => {
           try {
             setDrawingState((prev) => ({ ...prev, isClearable: true }));
-            const areaInfo = await fetchAreaName(finalPolygon);
-            setAreaName(areaInfo.name);
-            setIsOcean(areaInfo.isOcean);
-            setHasCountry(areaInfo.hasCountry);
+            // const areaInfo = await fetchAreaName(finalPolygon);
+            // setAreaName(areaInfo.name);
+            // setIsOcean(areaInfo.isOcean);
+            // setHasCountry(areaInfo.hasCountry);
             setCurrentPolygonVertices(finalPolygon);
             const resp = await sendPolygonToBackend(finalPolygon);
-            setBackendResponse(resp);
+            console.log(resp)
+            // setBackendResponse(resp);
             setDrawingState({
               isDrawing: true,
               isClearable: true,
@@ -150,11 +151,12 @@ export default function App() {
       <AlertDialogDemo />
 
       {/* Sidebar */}
-      {drawingState.isCompleted ? (
+      {/* {drawingState.isCompleted ? (
         <SidebarActive area={areaName} isOcean={isOcean} hasCountry={hasCountry} data={backendResponse} />
       ) : (
         <SidebarInactive />
-      )}
+      )} */}
+      <SidebarInactive />
 
       {/* Cesium viewer */}
       <ResiumViewer

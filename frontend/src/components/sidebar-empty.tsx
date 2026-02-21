@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import logo from "@/../public/terraviz.png";
+import logo from "@/terraviz.png";
 
 interface EmptySidebarProps {
     title: string;

@@ -50,30 +50,12 @@ export async function sendPolygonToBackend(coords: PolygonCoords): Promise<Backe
     const polygon = isClosed ? coords : [...coords, closed];
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    if (!backendUrl) {
-        throw new Error("Missing VITE_BACKEND_URL environment variable.");
-    }
 
-    console.log("Sending polygon to backend:", backendUrl + "/api/rusle");
+    console.log("Sending polygon to backend:", backendUrl + "/health");
     console.log("Coordinates count:", polygon.length);
 
-    const res = await fetch(`${backendUrl}/api/rusle`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            coordinates: polygon.map(p => ({
-                longitude: p.longitude,
-                latitude: p.latitude
-            })),
-            options: {
-                p_toggle: false,
-                date_range: "2025-01-01/2025-12-31",
-                threshold_t_ha_yr: 20.0,
-                compute_sensitivities: true
-            }
-        })
+    const res = await fetch(`${backendUrl}/health`, {
+        method: "GET",
     });
 
     console.log("Response status:", res.status);
