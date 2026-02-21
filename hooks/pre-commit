@@ -1,0 +1,4 @@
+#!/bin/bash
+# GreenLinter pre-commit hook wrapper
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+python3 "$REPO_ROOT/hooks/greenlinter_hook.py"

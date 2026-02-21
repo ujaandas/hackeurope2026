@@ -1,0 +1,92 @@
+The Challenge
+Build a solution that behaves like an Autonomous Senior Consultant—a digital entity that doesn't just execute tasks, but reasons about them, understands business context, and delivers production-quality solutions.
+Your team will choose the theme below. The theme represents a real consulting engagement that BearingPoint tackles for enterprise clients.
+Theme: Green Code Optimizer 🌱
+Persona: The "Brain" (Architects & Consultants)
+Difficulty: Medium
+The Business Problem:
+A cloud-native company spends €2M/year on AWS compute. With sustainability goals and rising costs, they need to optimize code for energy efficiency.
+Your Mission:
+Build an AI system that analyzes code for energy efficiency and suggests "green" refactorings.
+Core Requirements:
+Energy Profiler: 
+Analyze code for energy-intensive patterns: 
+Inefficient algorithms (O(n²) where O(n log n) possible)
+Excessive memory allocations
+Unnecessary network calls
+Polling instead of event-driven patterns
+Estimate energy consumption (CPU cycles, memory pressure)
+AI Optimization Engine: 
+Suggest refactorings to reduce energy footprint
+Generate optimized code snippets
+Calculate estimated savings (kWh, €, CO₂)
+Impact Dashboard: 
+Show energy consumption by module/service
+Track optimization impact over time
+Gamification (sustainability score, team rankings)
+Deliverables:
+Working analyzer for at least 2 energy anti-patterns
+Before/after energy comparison for demo refactorings
+Dashboard showing sustainability metrics
+ROI calculator (energy savings → cost savings → CO₂ reduction)
+Bonus Points:
+Integration with cloud cost APIs (AWS Cost Explorer)
+Right-sizing recommendations (smaller VM instances)
+Database query optimization for energy efficiency
+Tech Suggestions:
+Profiling: .NET Diagnostic Tools, Java Flight Recorder
+Analysis: Any static analysis framework + LLM
+Carbon metrics: Green Software Foundation APIs
+Sourcing Your Data: Use the Green Software Foundation’s Public APIs for carbon intensity data. For code, use standard algorithmic benchmarks available on GitHub (e.g., The Algorithms repository).
+
+
+
+Suggested Technical Guidelines & Freedom
+Technology Choices:
+Backend: Python
+Frontend: React
+Must be functional, not just a prototype
+AI Integration: Any provider/model 
+OpenAI (GPT-4o, o1), Anthropic (Claude), Azure OpenAI
+Open-source models (Llama, Mistral) via Ollama
+Clearly document your prompts and reasoning chains
+You have the freedom to choose other technology stacks and languages.
+Engineering Standards:
+Clean Git history with meaningful commits
+Unit tests for core logic (minimum 60% branch coverage)
+README with: 
+Architecture Decision Records (ADRs) for key choices
+Setup instructions (we should run it in <10 minutes)
+API documentation (if applicable)
+Docker/Docker Compose for easy deployment
+Teams must provide a 'Decision Log' or 'Chain-of-Thought' export. We want to see how the AI arrived at a specific refactoring or compliance decision. Black-box prompt-and-response will be scored lower than transparent reasoning
+AI Best Practices:
+Show your Chain-of-Thought (how does the AI reason?)
+Implement guardrails (what happens when AI fails?)
+Token usage optimization (don't waste context window)
+Error handling (graceful degradation when APIs are down)
+
+
+Resources & Support
+For each theme: see Public APIs & Regulatory Portals 
+⚖️ Theme: Regulatory Compliance (DORA & AI Act)
+Use these to find the official legal text and compliance mandates.
+DORA (Digital Operational Resilience Act): Official EUR-Lex - Regulation (EU) 2022/2554
+EU AI Act: Official EUR-Lex - Regulation (EU) 2024/1689
+AI Act Explorer: User-friendly searchable version of the Act
+
+🌿 Theme: Green Code & Sustainability
+APIs and tools to optimize software for carbon intensity and energy efficiency.
+Carbon Aware SDK: Green Software Foundation GitHub
+Electricity Maps API: Global Real-time Carbon Intensity Data
+WattTime API: Marginal Emissions Data for Devs
+SCI Specification: Software Carbon Intensity Standard
+
+
+Mentorship:
+BearingPoint engineers will be available to answer questions.
+Recommended Learning:
+Roslyn (C#): https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/
+Multi-Agent AI: AutoGen documentation, CrewAI tutorials
+DORA Regulation: EU official summary (we provide TL;DR)
+OpenAPI Testing: Swagger codegen guides
