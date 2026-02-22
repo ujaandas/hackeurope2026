@@ -1,7 +1,10 @@
 import httpx
 from app.ai.provider import (
-    AIProvider, OptimizeResult, SYSTEM_PROMPT,
-    build_optimization_prompt, parse_ai_response,
+    AIProvider,
+    OptimizeResult,
+    SYSTEM_PROMPT,
+    build_optimization_prompt,
+    parse_ai_response,
 )
 from app.models import DetectedPattern
 from app.config import settings
