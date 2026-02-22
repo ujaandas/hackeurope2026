@@ -22,7 +22,9 @@ Rules:
 5. Use modern C++ best practices (STL algorithms, smart pointers, etc.)"""
 
 
-def build_optimization_prompt(code: str, patterns: list[DetectedPattern], language: str) -> str:
+def build_optimization_prompt(
+    code: str, patterns: list[DetectedPattern], language: str
+) -> str:
     pattern_descriptions = "\n".join(
         f"- Line {p.line_start}-{p.line_end}: {p.name} -- {p.description}"
         for p in patterns
@@ -59,7 +61,8 @@ def parse_ai_response(raw: str) -> OptimizeResult:
     # Extract chain of thought
     cot_match = re.search(
         r"CHAIN OF THOUGHT:\s*\n(.*?)(?=CHANGES SUMMARY:|OPTIMIZED CODE:|$)",
-        raw, re.DOTALL,
+        raw,
+        re.DOTALL,
     )
     if cot_match:
         chain_of_thought = cot_match.group(1).strip()
@@ -67,7 +70,8 @@ def parse_ai_response(raw: str) -> OptimizeResult:
     # Extract changes summary
     cs_match = re.search(
         r"CHANGES SUMMARY:\s*\n(.*?)(?=OPTIMIZED CODE:|$)",
-        raw, re.DOTALL,
+        raw,
+        re.DOTALL,
     )
     if cs_match:
         changes_summary = cs_match.group(1).strip()
@@ -102,8 +106,14 @@ class AIProvider(ABC):
 def get_provider(name: str) -> AIProvider:
     if name == "ollama":
         from app.ai.ollama_provider import OllamaProvider
+
         return OllamaProvider()
     elif name == "claude":
         from app.ai.claude_provider import ClaudeProvider
+
         return ClaudeProvider()
+    elif name == "gemini":
+        from app.ai.gemini_provider import GeminiProvider
+
+        return GeminiProvider()
     raise ValueError(f"Unknown AI provider: {name}")

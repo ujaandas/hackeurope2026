@@ -5,7 +5,8 @@ class Settings:
     OLLAMA_URL: str = os.getenv("OLLAMA_URL", "http://localhost:11434")
     OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "codellama")
     ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
-    AI_PROVIDER: str = os.getenv("AI_PROVIDER", "ollama")
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+    AI_PROVIDER: str = os.getenv("AI_PROVIDER", "gemini")
     DATABASE_PATH: str = os.getenv("DATABASE_PATH", "./data/greenlinter.db")
 
     # Carbon intensity API configuration

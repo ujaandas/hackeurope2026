@@ -1,7 +1,10 @@
 from fastapi import APIRouter
 from app.models import (
-    OptimizeRequest, OptimizeResponse,
-    HookRequest, HookResponse, HookFileResult,
+    OptimizeRequest,
+    OptimizeResponse,
+    HookRequest,
+    HookResponse,
+    HookFileResult,
 )
 from app.ai.provider import get_provider
 from app.analyzer.engine import AnalysisEngine
@@ -10,13 +13,14 @@ from app.analyzer.patterns.sorting import SortingPatternDetector
 from app.analyzer.patterns.memory import MemoryPatternDetector
 from app.analyzer.patterns.network import NetworkPatternDetector
 from app.db.database import save_optimization
+from app.config import settings
 
 router = APIRouter()
 
 
 @router.post("/optimize", response_model=OptimizeResponse)
 async def optimize_code(req: OptimizeRequest):
-    provider = get_provider(req.provider)
+    provider = get_provider(settings.AI_PROVIDER)
     result = await provider.optimize_code(req.code, req.patterns, req.language)
 
     energy_before = await estimate_energy_live(req.patterns)
@@ -25,7 +29,9 @@ async def optimize_code(req: OptimizeRequest):
 
     savings_kwh = energy_before["estimated_kwh"] - energy_after["estimated_kwh"]
     savings_co2 = energy_before["estimated_co2_kg"] - energy_after["estimated_co2_kg"]
-    savings_eur = energy_before["estimated_cost_eur"] - energy_after["estimated_cost_eur"]
+    savings_eur = (
+        energy_before["estimated_cost_eur"] - energy_after["estimated_cost_eur"]
+    )
 
     # Save to database
     await save_optimization(
@@ -68,19 +74,23 @@ async def hook_endpoint(req: HookRequest):
 
     results = []
     for file in req.files:
-        language = "cpp" if file.filename.endswith((".cpp", ".hpp", ".cc", ".h")) else "python"
+        language = (
+            "cpp" if file.filename.endswith((".cpp", ".hpp", ".cc", ".h")) else "python"
+        )
         patterns = engine.analyze(file.code, language)
 
         if not patterns:
-            results.append(HookFileResult(
-                filename=file.filename,
-                had_issues=False,
-                optimized_code=file.code,
-                patterns_count=0,
-                savings_kwh=0.0,
-                savings_co2=0.0,
-                savings_eur=0.0,
-            ))
+            results.append(
+                HookFileResult(
+                    filename=file.filename,
+                    had_issues=False,
+                    optimized_code=file.code,
+                    patterns_count=0,
+                    savings_kwh=0.0,
+                    savings_co2=0.0,
+                    savings_eur=0.0,
+                )
+            )
             continue
 
         # Optimize with AI
@@ -90,8 +100,12 @@ async def hook_endpoint(req: HookRequest):
         energy_before = await estimate_energy_live(patterns)
         energy_after = await estimate_energy_live([])
         savings_kwh = energy_before["estimated_kwh"] - energy_after["estimated_kwh"]
-        savings_co2 = energy_before["estimated_co2_kg"] - energy_after["estimated_co2_kg"]
-        savings_eur = energy_before["estimated_cost_eur"] - energy_after["estimated_cost_eur"]
+        savings_co2 = (
+            energy_before["estimated_co2_kg"] - energy_after["estimated_co2_kg"]
+        )
+        savings_eur = (
+            energy_before["estimated_cost_eur"] - energy_after["estimated_cost_eur"]
+        )
 
         # Save to DB
         await save_optimization(
@@ -110,15 +124,17 @@ async def hook_endpoint(req: HookRequest):
             ai_provider=req.provider,
         )
 
-        results.append(HookFileResult(
-            filename=file.filename,
-            had_issues=True,
-            optimized_code=ai_result.optimized_code,
-            patterns_count=len(patterns),
-            savings_kwh=savings_kwh,
-            savings_co2=savings_co2,
-            savings_eur=savings_eur,
-            chain_of_thought=ai_result.chain_of_thought,
-        ))
+        results.append(
+            HookFileResult(
+                filename=file.filename,
+                had_issues=True,
+                optimized_code=ai_result.optimized_code,
+                patterns_count=len(patterns),
+                savings_kwh=savings_kwh,
+                savings_co2=savings_co2,
+                savings_eur=savings_eur,
+                chain_of_thought=ai_result.chain_of_thought,
+            )
+        )
 
     return HookResponse(results=results)
