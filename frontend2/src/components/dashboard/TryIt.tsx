@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Code2, Play, Sparkles, AlertTriangle } from "lucide-react"; import { analyzeCode, optimizeCode, type AnalyzeResponse, type OptimizeResponse } from "../../lib/api";
-;
+import { Code2, Play, Sparkles, AlertTriangle, RotateCcw } from "lucide-react";
+import Editor from "@monaco-editor/react";
+import { analyzeCode, optimizeCode, type AnalyzeResponse, type OptimizeResponse } from "../../lib/api";
 
 const SAMPLE_CODE = `#include <vector>
 #include <iostream>
@@ -71,34 +72,62 @@ const TryIt = ({ onOptimized }: TryItProps) => {
         <div className="space-y-6">
             {/* Code Input Panel */}
             <div className="rounded-xl border border-border bg-gradient-card p-6 shadow-card">
-                <div className="flex items-center gap-2 mb-5">
-                    <Code2 className="w-5 h-5 text-primary" />
-                    <h2 className="text-lg font-semibold text-foreground">Analyze Code</h2>
+                <div className="flex items-center justify-between mb-5">
+                    <div className="flex items-center gap-2">
+                        <Code2 className="w-5 h-5 text-primary" />
+                        <h2 className="text-lg font-semibold text-foreground">Analyze Code</h2>
+                    </div>
+                    <div className="flex gap-3 items-center">
+                        <select
+                            value={language}
+                            onChange={(e) => setLanguage(e.target.value)}
+                            className="bg-input border border-border text-foreground px-3 py-1.5 rounded-lg text-xs font-mono focus:outline-none focus:ring-1 focus:ring-ring"
+                        >
+                            <option value="cpp">C++</option>
+                            <option value="python">Python</option>
+                        </select>
+                        <button
+                            onClick={() => setCode(SAMPLE_CODE)}
+                            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                        >
+                            <RotateCcw className="w-3 h-3" />
+                            Reset
+                        </button>
+                    </div>
                 </div>
 
-                <div className="flex gap-3 mb-4 items-center">
-                    <select
-                        value={language}
-                        onChange={(e) => setLanguage(e.target.value)}
-                        className="bg-input border border-border text-foreground px-3 py-2 rounded-lg text-sm font-mono focus:outline-none focus:ring-1 focus:ring-ring"
-                    >
-                        <option value="cpp">C++</option>
-                        <option value="python">Python</option>
-                    </select>
-                    <button
-                        onClick={() => setCode(SAMPLE_CODE)}
-                        className="text-xs px-3 py-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
-                    >
-                        Load Sample
-                    </button>
+                {/* Robust Monaco Editor Integration */}
+                <div className="w-full h-[400px] border border-border rounded-lg overflow-hidden bg-[#050505]">
+                    <Editor
+                        height="100%"
+                        language={language === "cpp" ? "cpp" : "python"}
+                        theme="custom-dark" // Point to your custom theme name
+                        value={code}
+                        onChange={(value: string | undefined) => setCode(value || "")}
+                        beforeMount={(monaco) => {
+                            // Define the theme before the component mounts
+                            monaco.editor.defineTheme('custom-dark', {
+                                base: 'vs-dark',
+                                inherit: true,
+                                rules: [],
+                                colors: {
+                                    'editor.background': '#050505',
+                                },
+                            });
+                        }}
+                        options={{
+                            minimap: { enabled: false },
+                            fontSize: 14,
+                            lineNumbers: "on",
+                            roundedSelection: true,
+                            scrollBeyondLastLine: false,
+                            automaticLayout: true,
+                            padding: { top: 16, bottom: 16 },
+                            fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+                            // backgroundColor: "#050505" <- REMOVE THIS LINE
+                        }}
+                    />
                 </div>
-
-                <textarea
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    placeholder="Paste your code here..."
-                    className="w-full h-64 bg-[hsl(200_30%_6%)] border border-border rounded-lg p-4 text-sm font-mono text-foreground resize-none focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
-                />
 
                 <div className="flex gap-3 mt-4">
                     <button
@@ -180,15 +209,27 @@ const TryIt = ({ onOptimized }: TryItProps) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <div className="text-xs uppercase tracking-wider text-muted-foreground font-medium mb-2">Original</div>
-                            <pre className="bg-[hsl(200_30%_6%)] rounded-lg p-4 text-sm text-foreground overflow-x-auto border border-border font-mono leading-relaxed">
-                                {optimized.original_code}
-                            </pre>
+                            <div className="h-64 border border-border rounded-lg overflow-hidden bg-[#050505]">
+                                <Editor
+                                    height="100%"
+                                    language={language === "cpp" ? "cpp" : "python"}
+                                    theme="vs-dark"
+                                    value={optimized.original_code}
+                                    options={{ readOnly: true, minimap: { enabled: false }, fontSize: 12, automaticLayout: true }}
+                                />
+                            </div>
                         </div>
                         <div>
                             <div className="text-xs uppercase tracking-wider text-primary font-medium mb-2">Optimized</div>
-                            <pre className="bg-[hsl(200_30%_6%)] rounded-lg p-4 text-sm text-foreground overflow-x-auto border border-primary/20 font-mono leading-relaxed">
-                                {optimized.optimized_code}
-                            </pre>
+                            <div className="h-64 border border-primary/20 rounded-lg overflow-hidden bg-[#050505]">
+                                <Editor
+                                    height="100%"
+                                    language={language === "cpp" ? "cpp" : "python"}
+                                    theme="vs-dark"
+                                    value={optimized.optimized_code}
+                                    options={{ readOnly: true, minimap: { enabled: false }, fontSize: 12, automaticLayout: true }}
+                                />
+                            </div>
                         </div>
                     </div>
                     {optimized.chain_of_thought && (
