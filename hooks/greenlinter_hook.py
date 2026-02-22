@@ -10,7 +10,7 @@ import urllib.error
 
 API_URL = os.environ.get("GREENLINTER_API_URL", "http://localhost:8000")
 ENABLED = os.environ.get("GREENLINTER_ENABLED", "true").lower() == "true"
-PROVIDER = os.environ.get("GREENLINTER_PROVIDER", "ollama")
+PROVIDER = os.environ.get("GREENLINTER_PROVIDER", "") or os.environ.get("AI_PROVIDER", "ollama")
 EXTENSIONS = (".cpp", ".hpp", ".cc", ".h", ".c")
 
 

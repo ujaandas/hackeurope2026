@@ -1,5 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from enum import Enum
+from app.config import settings
 
 
 class PatternSeverity(str, Enum):
@@ -34,6 +35,7 @@ class AnalyzeResponse(BaseModel):
     estimated_kwh: float
     estimated_co2_kg: float
     estimated_cost_eur: float
+    carbon_intensity_gco2_kwh: float = 0.0
 
 
 class OptimizeRequest(BaseModel):
@@ -41,7 +43,12 @@ class OptimizeRequest(BaseModel):
     code: str
     patterns: list[DetectedPattern]
     language: str = "cpp"
-    provider: str = "ollama"
+    provider: str = ""
+
+    @field_validator("provider", mode="before")
+    @classmethod
+    def default_provider(cls, v: str) -> str:
+        return v or settings.AI_PROVIDER
 
 
 class OptimizeResponse(BaseModel):
@@ -64,7 +71,12 @@ class HookFileRequest(BaseModel):
 
 class HookRequest(BaseModel):
     files: list[HookFileRequest]
-    provider: str = "ollama"
+    provider: str = ""
+
+    @field_validator("provider", mode="before")
+    @classmethod
+    def default_provider(cls, v: str) -> str:
+        return v or settings.AI_PROVIDER
 
 
 class HookFileResult(BaseModel):

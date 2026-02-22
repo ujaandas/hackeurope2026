@@ -15,8 +15,8 @@ class ClaudeProvider(AIProvider):
         try:
             client = AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
             message = await client.messages.create(
-                model="claude-sonnet-4-20250514",
-                max_tokens=4096,
+                model="claude-sonnet-4-6-20250220",
+                max_tokens=8192,
                 system=SYSTEM_PROMPT,
                 messages=[{"role": "user", "content": prompt}],
             )

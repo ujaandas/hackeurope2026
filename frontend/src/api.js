@@ -16,11 +16,11 @@ export async function analyzeCode(filename, code, language = 'cpp') {
   return res.json();
 }
 
-export async function optimizeCode(filename, code, patterns, language = 'cpp', provider = 'ollama') {
+export async function optimizeCode(filename, code, patterns, language = 'cpp') {
   const res = await fetch(`${BASE_URL}/api/optimize`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ filename, code, patterns, language, provider }),
+    body: JSON.stringify({ filename, code, patterns, language }),
   });
   if (!res.ok) throw new Error('Failed to optimize code');
   return res.json();

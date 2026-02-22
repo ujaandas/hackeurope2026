@@ -5,6 +5,7 @@ from app.db.database import init_db
 from app.analyzer.engine import AnalysisEngine
 from app.analyzer.patterns.sorting import SortingPatternDetector
 from app.analyzer.patterns.memory import MemoryPatternDetector
+from app.analyzer.patterns.network import NetworkPatternDetector
 from app.routers import analyze, optimize, dashboard
 
 
@@ -15,6 +16,7 @@ async def lifespan(app: FastAPI):
     engine = AnalysisEngine()
     engine.register(SortingPatternDetector())
     engine.register(MemoryPatternDetector())
+    engine.register(NetworkPatternDetector())
     app.state.engine = engine
     yield
     # Shutdown - nothing to clean up

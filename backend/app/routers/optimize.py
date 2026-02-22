@@ -5,9 +5,10 @@ from app.models import (
 )
 from app.ai.provider import get_provider
 from app.analyzer.engine import AnalysisEngine
-from app.analyzer.energy import estimate_energy
+from app.analyzer.energy import estimate_energy_live
 from app.analyzer.patterns.sorting import SortingPatternDetector
 from app.analyzer.patterns.memory import MemoryPatternDetector
+from app.analyzer.patterns.network import NetworkPatternDetector
 from app.db.database import save_optimization
 
 router = APIRouter()
@@ -18,9 +19,9 @@ async def optimize_code(req: OptimizeRequest):
     provider = get_provider(req.provider)
     result = await provider.optimize_code(req.code, req.patterns, req.language)
 
-    energy_before = estimate_energy(req.patterns)
+    energy_before = await estimate_energy_live(req.patterns)
     # After optimization, assume patterns are resolved
-    energy_after = estimate_energy([])
+    energy_after = await estimate_energy_live([])
 
     savings_kwh = energy_before["estimated_kwh"] - energy_after["estimated_kwh"]
     savings_co2 = energy_before["estimated_co2_kg"] - energy_after["estimated_co2_kg"]
@@ -63,6 +64,7 @@ async def hook_endpoint(req: HookRequest):
     engine = AnalysisEngine()
     engine.register(SortingPatternDetector())
     engine.register(MemoryPatternDetector())
+    engine.register(NetworkPatternDetector())
 
     results = []
     for file in req.files:
@@ -85,8 +87,8 @@ async def hook_endpoint(req: HookRequest):
         provider = get_provider(req.provider)
         ai_result = await provider.optimize_code(file.code, patterns, language)
 
-        energy_before = estimate_energy(patterns)
-        energy_after = estimate_energy([])
+        energy_before = await estimate_energy_live(patterns)
+        energy_after = await estimate_energy_live([])
         savings_kwh = energy_before["estimated_kwh"] - energy_after["estimated_kwh"]
         savings_co2 = energy_before["estimated_co2_kg"] - energy_after["estimated_co2_kg"]
         savings_eur = energy_before["estimated_cost_eur"] - energy_after["estimated_cost_eur"]
