@@ -1,3 +1,4 @@
+@import "tailwindcss";
 * {
   margin: 0;
   padding: 0;
@@ -5,7 +6,8 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: #0f1923;
   color: #e0e0e0;
   line-height: 1.6;
@@ -159,7 +161,7 @@ body {
   color: #e0e0e0;
   padding: 12px;
   border-radius: 8px;
-  font-family: 'Fira Code', 'Consolas', monospace;
+  font-family: "Fira Code", "Consolas", monospace;
   font-size: 0.9rem;
   resize: vertical;
 }
@@ -214,7 +216,7 @@ body {
   border: 1px solid #1e3a4a;
   overflow-x: auto;
   font-size: 0.85rem;
-  font-family: 'Fira Code', 'Consolas', monospace;
+  font-family: "Fira Code", "Consolas", monospace;
   white-space: pre-wrap;
 }
 
@@ -281,9 +283,18 @@ body {
   border: 4px solid;
 }
 
-.score-circle.green { border-color: #4ade80; color: #4ade80; }
-.score-circle.yellow { border-color: #f59e0b; color: #f59e0b; }
-.score-circle.red { border-color: #ef4444; color: #ef4444; }
+.score-circle.green {
+  border-color: #4ade80;
+  color: #4ade80;
+}
+.score-circle.yellow {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+.score-circle.red {
+  border-color: #ef4444;
+  color: #ef4444;
+}
 
 .score-label {
   margin-top: 8px;
@@ -304,7 +315,13 @@ body {
 }
 
 @media (max-width: 768px) {
-  .kpi-row { grid-template-columns: repeat(2, 1fr); }
-  .grid-2 { grid-template-columns: 1fr; }
-  .code-diff { grid-template-columns: 1fr; }
+  .kpi-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .code-diff {
+    grid-template-columns: 1fr;
+  }
 }
